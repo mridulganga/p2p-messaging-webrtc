@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css">
+</head>
+
+<body>
+
+    <input id="peerid" placeholder="My ID"> <button onclick="join()">Join</button><br>
+
+    <input type="text" id="fpeerid" placeholder="Peer ID"> <button id="connect" onclick="connect()">Connect</button>
+    <br>
+
+    <input type="text" id="msg" placeholder="Message.."> <button id="send" onclick="sendMessage()">Send</button> <br>
+
+    <ul id="messages">
+
+    </ul>
+
+    <script src="https://unpkg.com/peerjs@1.2.0/dist/peerjs.min.js"></script>
+
+    <script>
+
+        peerIDField = document.querySelector("#peerid")
+        fpeerIDField = document.querySelector("#fpeerid")
+        msg = document.querySelector("#msg")
+        messages = document.querySelector("#messages")
+
+        var conn = null
+
+        var peer = null
+
+        function join() {
+            peer = new Peer();
+            console.log("Loading..")
+            peer.on('open', function (id) {
+                peerIDField.value = id
+                console.log('My peer ID is: ' + id);
+            });
+
+            peer.on('close', function () {
+                peer = new Peer();
+            });
+
+            peer.on('connection', function (c) {
+                conn = c
+                console.log("New connection : ")
+                console.log(conn)
+                fpeerIDField.value = c.peer
+                conn.on('open', function () {
+                    // Receive messages - receiver side
+                    conn.on('data', function (data) {
+                        console.log('Received', data);
+                        printMsg("Friend : " + data)
+                    });
+                });
+            });
+
+            peer.on('disconnected', function () {
+                console.log("disconnected")
+                conn = null
+            })
+        }
+
+
+
+
+
+
+
+
+        function connect() {
+            console.log("connecting to " + fpeerIDField.value)
+            conn = peer.connect(fpeerIDField.value);
+
+            conn.on('open', function () {
+                console.log("connected")
+                // Receive messages - sender side
+                conn.on('data', function (data) {
+                    console.log('Received', data);
+                    printMsg("Friend : " + data)
+                });
+            });
+
+        }
+
+        function sendMessage() {
+            console.log("sending message")
+            // send message at sender or receiver side
+            if (conn && conn.open) {
+                printMsg("Me : " + msg.value)
+                conn.send(msg.value);
+            }
+        }
+
+        function printMsg(msg) {
+            messages.innerHTML = messages.innerHTML + "<li>" + msg + "</li>"
+        }
+
+    </script>
+</body>
+
+</html>
