@@ -35,7 +35,11 @@
         var peer = null
 
         function join() {
-            peer = new Peer();
+            peer = new Peer('', {
+                host: 'mg-peer-server.herokuapp.com',
+                port: 80,
+                path: "/"
+            });
             console.log("Loading..")
             peer.on('open', function (id) {
                 peerIDField.value = id
@@ -65,13 +69,6 @@
                 conn = null
             })
         }
-
-
-
-
-
-
-
 
         function connect() {
             console.log("connecting to " + fpeerIDField.value)
