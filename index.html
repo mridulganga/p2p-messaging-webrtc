@@ -6,16 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.css">
+    
 </head>
 
 <body>
-
-    <input id="peerid" placeholder="My ID"> <button onclick="join()">Join</button><br>
-
-    <input type="text" id="fpeerid" placeholder="Peer ID"> <button id="connect" onclick="connect()">Connect</button>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  
+    <script defer src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <link rel="shortcut icon" href="#" />
+ 
+<h2> P2P Messging App</h2>
+    <!-- <div class="ui input">  </div> -->
+    <input id="peerid"  class="ui input" placeholder="My ID">
+   
+    <button class="ui primary button" style="margin: 20px 5px;" onclick="join()">Join</button> 
+    <button class="ui primary button" style="margin: 20px 5px;" onclick="copyButton()">Copy</button> 
+    
+    <br>
+    <br>
+ 
+    <input type="text" class="ui input" id="fpeerid" placeholder="Peer ID"> <button class="ui primary button"  style="margin: 20px 5px;" id="connect" onclick="connect()">Connect</button>
+    <br>
     <br>
 
-    <input type="text" id="msg" placeholder="Message.."> <button id="send" onclick="sendMessage()">Send</button> <br>
+    <input type="text"class="ui input"  id="msg" placeholder="Message.."> <button class="ui primary button"  style="margin: 20px 5px;" id="send" onclick="sendMessage()">Send</button> <br>
 
     <ul id="messages">
 
@@ -36,8 +54,8 @@
 
         function join() {
             peer = new Peer('', {
-                host: 'mg-peer-server.herokuapp.com',
-                port: 443,
+                host: 'localhost',
+                port: 9000,
                 path: "/"
             });
             console.log("Loading..")
@@ -97,6 +115,13 @@
         function printMsg(msg) {
             messages.innerHTML = messages.innerHTML + "<li>" + msg + "</li>"
         }
+        function copyButton() {
+            var copyText = document.getElementById("peerid");
+            copyText.select();
+            copyText.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            alert("Copied the text: " + copyText.value);
+          }
 
     </script>
 </body>
